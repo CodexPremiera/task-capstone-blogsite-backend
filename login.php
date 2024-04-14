@@ -3,18 +3,20 @@
 global $connection;
 include 'connect.php';
 
+// allow all origins
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST");
 header("Access-Control-Allow-Headers: Content-Type");
 
-// Retrieve email and password from request body
+// retrieve email and password from the form
 $data = json_decode(file_get_contents("php://input"), true);
-$email = 'john.doe@example.com';
-$password = 'password123';
+$email = $data['email'];
+$password = $data['password'];
 
-// Query the database to find the user
+// query the database to find the user
 $query = "
 SELECT
+    ua.ID_UserAccount AS ID_UserAccount,
     u.Firstname AS Firstname,
     u.Lastname AS Lastname,
     u.Gender AS Gender,
@@ -41,6 +43,7 @@ WHERE
 ";
 $result = mysqli_query($connection, $query);
 
+// handle failed query
 if (!$result) {
     // User found, return user data
     http_response_code(401);
@@ -48,5 +51,6 @@ if (!$result) {
     die(mysqli_error($connection));
 }
 
+// return user data
 $user = mysqli_fetch_assoc($result);
 echo json_encode($user);
