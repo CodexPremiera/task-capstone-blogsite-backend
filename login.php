@@ -13,8 +13,8 @@ $data = json_decode(file_get_contents("php://input"), true);
 $email = $data['email'];
 $password = $data['password'];
 
-// query the database to find the user
-$query = "
+// query the database to find the user account
+$getUserAccountQuery = "
 SELECT
     ua.ID_UserAccount AS ID_UserAccount,
     u.Firstname AS Firstname,
@@ -41,7 +41,7 @@ WHERE
     a.Email = '$email'
     AND a.Password = '$password';
 ";
-$result = mysqli_query($connection, $query);
+$result = mysqli_query($connection, $getUserAccountQuery);
 
 // handle failed query
 if (!$result) {
