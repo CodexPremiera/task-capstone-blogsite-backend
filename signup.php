@@ -60,7 +60,7 @@ $password = trim($password);
 if (empty($firstname) || empty($lastname) || empty($gender) || empty($birthdate) ||
     empty($username) || empty($email) || empty($password))
 {
-    echo json_encode(["error" => "All fields are required"]);
+    echo json_encode(["error" => "All fields must be supplied"]);
     http_response_code(400);
     die(mysqli_error($connection));
 }

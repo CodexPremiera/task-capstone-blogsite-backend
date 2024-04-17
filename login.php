@@ -4,14 +4,33 @@ global $connection;
 include 'connect.php';
 
 // allow all origins
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST");
-header("Access-Control-Allow-Headers: Content-Type");
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Max-Age: 86400');    // cache for 1 day
+}
 
-// retrieve email and password from the form
+// Access-Control headers are received during OPTIONS requests
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
+        header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+
+    exit(0);
+}
+
+// retrieve and validate email and password from the form
 $data = json_decode(file_get_contents("php://input"), true);
-$email = $data['email'];
+$email = trim($data['email']);
 $password = $data['password'];
+
+if (empty($email) || empty(trim($password)) ) {
+    echo json_encode(["error" => "All fields must be supplied"]);
+    http_response_code(400);
+    die(mysqli_error($connection));
+}
 
 // query the database to find the user account
 $getUserAccountQuery = "
