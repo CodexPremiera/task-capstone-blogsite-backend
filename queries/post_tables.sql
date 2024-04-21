@@ -1,4 +1,13 @@
+
+--
+-- Database: `dbcomandaof1`
+--
+
+-- --------------------------------------------------------
+
+--
 -- tbl_post
+--
 CREATE TABLE if not exists `tbl_post` (
   `ID_Post` INT AUTO_INCREMENT, -- Primary key
   `Title` VARCHAR(255) not null,
@@ -34,8 +43,11 @@ END;
 //
 DELIMITER ;
 
+-- --------------------------------------------------------
 
+--
 -- tbl_author
+--
 CREATE TABLE if not exists `tbl_author` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_Post` INT not null,
@@ -45,16 +57,22 @@ CREATE TABLE if not exists `tbl_author` (
   PRIMARY KEY (`sequence_no`)
 );
 
+-- --------------------------------------------------------
 
+--
 -- tbl_tag
+--
 CREATE TABLE if not exists `tbl_tag` (
   `ID_Tag` INT auto_increment,
   `TagName` VARCHAR(255) not null,
   PRIMARY KEY (`ID_Tag`)
 );
 
+-- --------------------------------------------------------
 
+--
 -- tbl_tag_post
+--
 CREATE TABLE if not exists `tbl_tag_post` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_UserAccount` INT not null,
@@ -77,8 +95,11 @@ END;
 //
 DELIMITER ;
 
+-- --------------------------------------------------------
 
+--
 -- tbl_save_post
+--
 CREATE TABLE if not exists `tbl_save_post` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_UserAccount` INT not null,
@@ -99,8 +120,11 @@ END;
 //
 DELIMITER ;
 
+-- --------------------------------------------------------
 
+--
 -- tbl_read_post
+--
 CREATE TABLE if not exists `tbl_read_post` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_UserAccount` INT not null,
@@ -111,7 +135,11 @@ CREATE TABLE if not exists `tbl_read_post` (
   PRIMARY KEY (`sequence_no`)
 );
 
+-- --------------------------------------------------------
+
+--
 -- tbl_comment
+--
 CREATE TABLE if not exists `tbl_comment` (
   `ID_Comment` INT AUTO_INCREMENT, -- Primary key
   `ID_UserAccount` INT not null,
@@ -147,8 +175,11 @@ END;
 //
 DELIMITER ;
 
+-- --------------------------------------------------------
 
+--
 -- tbl_like
+--
 CREATE TABLE if not exists `tbl_like` (
   `ID_Like` INT AUTO_INCREMENT, -- Primary key
   `ID_UserAccount` INT not null,
@@ -167,6 +198,11 @@ END;
 //
 DELIMITER ;
 
+-- --------------------------------------------------------
+
+--
+-- tbl_like_post
+--
 CREATE TABLE if not exists `tbl_like_post` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_Like` INT not null,
@@ -176,6 +212,12 @@ CREATE TABLE if not exists `tbl_like_post` (
   PRIMARY KEY (`sequence_no`)
 );
 
+-- --------------------------------------------------------
+
+--
+-- tbl_like_comment
+--
+
 CREATE TABLE if not exists `tbl_like_comment` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_Like` INT not null,
@@ -184,3 +226,5 @@ CREATE TABLE if not exists `tbl_like_comment` (
   FOREIGN KEY (`ID_Like`) REFERENCES `tbl_like`(`ID_Like`),
   PRIMARY KEY (`sequence_no`)
 );
+
+-- --------------------------------------------------------

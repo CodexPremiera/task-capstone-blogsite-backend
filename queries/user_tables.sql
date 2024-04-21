@@ -1,5 +1,13 @@
 
+--
+-- Database: `dbcomandaof1`
+--
+
+-- --------------------------------------------------------
+
+--
 -- tbl_user
+--
 CREATE TABLE if not exists `tbl_user` (
   `ID_User` INT AUTO_INCREMENT, -- Primary key
   `Firstname` VARCHAR(255) not null ,
@@ -30,7 +38,11 @@ END;
 //
 DELIMITER ;
 
+-- --------------------------------------------------------
+
+--
 -- tbl_account
+--
 CREATE TABLE if not exists `tbl_account` (
   `ID_Account` INT AUTO_INCREMENT, -- Primary key
   `Username` VARCHAR(255) not null ,
@@ -42,7 +54,11 @@ CREATE TABLE if not exists `tbl_account` (
   PRIMARY KEY (`ID_Account`)
 );
 
+-- --------------------------------------------------------
+
+--
 -- tbl_user_account
+--
 CREATE TABLE if not exists `tbl_user_account` (
   `ID_UserAccount` INT AUTO_INCREMENT, -- Primary key
   `ID_User` INT,
@@ -55,3 +71,5 @@ CREATE TABLE if not exists `tbl_user_account` (
   FOREIGN KEY (`ID_Account`) REFERENCES `tbl_account`(`ID_Account`),
   PRIMARY KEY (`ID_UserAccount`)
 );
+
+-- --------------------------------------------------------
