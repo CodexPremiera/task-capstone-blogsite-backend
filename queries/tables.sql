@@ -1,4 +1,4 @@
-CREATE TABLE `tbl_user` (
+CREATE TABLE if not exists `tbl_user` (
   `ID_User` INT AUTO_INCREMENT, -- Primary key
   `Firstname` VARCHAR(255) not null ,
   `Lastname` VARCHAR(255) not null ,
@@ -28,7 +28,7 @@ END;
 //
 DELIMITER ;
 
-CREATE TABLE `tbl_account` (
+CREATE TABLE if not exists `tbl_account` (
   `ID_Account` INT AUTO_INCREMENT, -- Primary key
   `Username` VARCHAR(255) not null ,
   `Email` VARCHAR(255) UNIQUE not null,
@@ -41,7 +41,7 @@ CREATE TABLE `tbl_account` (
 
 
 
-CREATE TABLE `tbl_user_account` (
+CREATE TABLE if not exists `tbl_user_account` (
   `ID_UserAccount` INT AUTO_INCREMENT, -- Primary key
   `ID_User` INT,
   `ID_Account` INT,
@@ -54,10 +54,10 @@ CREATE TABLE `tbl_user_account` (
   PRIMARY KEY (`ID_UserAccount`)
 );
 
-CREATE TABLE `tbl_post` (
+CREATE TABLE if not exists `tbl_post` (
   `ID_Post` INT AUTO_INCREMENT, -- Primary key
-  `Title` VARCHAR(255),
-  `Content` TEXT,
+  `Title` VARCHAR(255) not null,
+  `Content` TEXT not null,
   `PhotoURL` VARCHAR(255),
   `PostDate` TIMESTAMP,
   `UpdateDate` TIMESTAMP,
@@ -68,7 +68,9 @@ CREATE TABLE `tbl_post` (
   PRIMARY KEY (`ID_Post`)
 );
 
-CREATE TABLE `tbl_author` (
+
+
+CREATE TABLE if not exists `tbl_author` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_Post` INT,
   `ID_UserAccount` INT,
@@ -77,13 +79,13 @@ CREATE TABLE `tbl_author` (
   PRIMARY KEY (`sequence_no`)
 );
 
-CREATE TABLE `tbl_tag` (
+CREATE TABLE if not exists `tbl_tag` (
   `ID_Tag` INT,
   `TagName` VARCHAR(255),
   PRIMARY KEY (`ID_Tag`)
 );
 
-CREATE TABLE `tbl_tag_post` (
+CREATE TABLE if not exists `tbl_tag_post` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_UserAccount` INT,
   `ID_Post` INT,
@@ -95,7 +97,7 @@ CREATE TABLE `tbl_tag_post` (
   PRIMARY KEY (`sequence_no`)
 );
 
-CREATE TABLE `tbl_save_post` (
+CREATE TABLE if not exists `tbl_save_post` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_UserAccount` INT,
   `ID_Post` INT,
@@ -105,7 +107,7 @@ CREATE TABLE `tbl_save_post` (
   PRIMARY KEY (`sequence_no`)
 );
 
-CREATE TABLE `tbl_read_post` (
+CREATE TABLE if not exists `tbl_read_post` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_UserAccount` INT,
   `ID_Post` INT,
@@ -115,7 +117,7 @@ CREATE TABLE `tbl_read_post` (
   PRIMARY KEY (`sequence_no`)
 );
 
-CREATE TABLE `tbl_comment` (
+CREATE TABLE if not exists `tbl_comment` (
   `ID_Comment` INT AUTO_INCREMENT, -- Primary key
   `ID_UserAccount` INT,
   `ID_Post` INT,
@@ -129,7 +131,7 @@ CREATE TABLE `tbl_comment` (
   PRIMARY KEY (`ID_Comment`)
 );
 
-CREATE TABLE `tbl_like` (
+CREATE TABLE if not exists `tbl_like` (
   `ID_Like` INT AUTO_INCREMENT, -- Primary key
   `ID_UserAccount` INT,
   `LikeDate` TIMESTAMP,
@@ -137,7 +139,7 @@ CREATE TABLE `tbl_like` (
   PRIMARY KEY (`ID_Like`)
 );
 
-CREATE TABLE `tbl_like_post` (
+CREATE TABLE if not exists `tbl_like_post` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_Like` INT,
   `ID_Post` INT,
@@ -146,7 +148,7 @@ CREATE TABLE `tbl_like_post` (
   PRIMARY KEY (`sequence_no`)
 );
 
-CREATE TABLE `tbl_like_comment` (
+CREATE TABLE if not exists `tbl_like_comment` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_Like` INT,
   `ID_Comment` INT,
@@ -155,14 +157,14 @@ CREATE TABLE `tbl_like_comment` (
   PRIMARY KEY (`sequence_no`)
 );
 
-CREATE TABLE `tbl_admin_account` (
+CREATE TABLE if not exists `tbl_admin_account` (
   `ID_Admin` INT AUTO_INCREMENT, -- Primary key
   `ID_UserAccount` INT,
   FOREIGN KEY (`ID_UserAccount`) REFERENCES `tbl_user_account`(`ID_UserAccount`),
   PRIMARY KEY (`ID_Admin`)
 );
 
-CREATE TABLE `tbl_user_statistics` (
+CREATE TABLE if not exists `tbl_user_statistics` (
   `ID_UserStatistics` INT AUTO_INCREMENT, -- Primary key
   `DateOfRecord` DATE,
   `UserAccCount` INT, -- Derived attribute (taken from the count of UserAccount)
@@ -171,7 +173,7 @@ CREATE TABLE `tbl_user_statistics` (
   PRIMARY KEY (`ID_UserStatistics`)
 );
 
-CREATE TABLE `tbl_post_statistics` (
+CREATE TABLE if not exists `tbl_post_statistics` (
   `ID_PostStatistics` INT AUTO_INCREMENT, -- Primary key
   `DateOfRecord` DATE,
   `PostCount` INT, -- Derived attribute (taken from the count of Post)
@@ -180,7 +182,7 @@ CREATE TABLE `tbl_post_statistics` (
   PRIMARY KEY (`ID_PostStatistics`)
 );
 
-CREATE TABLE `tbl_site_statistics` (
+CREATE TABLE if not exists `tbl_site_statistics` (
   `ID_SiteStatistics` INT AUTO_INCREMENT, -- Primary key
   `DateOfRecord` DATE,
   `ID_UserStatistics` INT,
@@ -190,7 +192,7 @@ CREATE TABLE `tbl_site_statistics` (
   PRIMARY KEY (`ID_SiteStatistics`)
 );
 
-CREATE TABLE `tbl_read_site_statistics` (
+CREATE TABLE if not exists `tbl_read_site_statistics` (
   `sequence_no` INT AUTO_INCREMENT, -- Primary key
   `ID_Admin` INT,
   `ID_SiteStatistics` INT,
