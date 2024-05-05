@@ -10,7 +10,7 @@
 --
 CREATE TABLE if not exists `tbl_admin_account` (
   `ID_Admin` INT AUTO_INCREMENT, -- Primary key
-  `ID_UserAccount` INT,
+  `ID_UserAccount` INT not null,
   FOREIGN KEY (`ID_UserAccount`) REFERENCES `tbl_user_account`(`ID_UserAccount`),
   PRIMARY KEY (`ID_Admin`)
 );
