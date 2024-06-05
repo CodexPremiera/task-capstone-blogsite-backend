@@ -2,7 +2,7 @@
 
 global $statement, $error;
 include '../connect.php';
-global $connection, $dbHost, $dbName, $dbUsername, $dbPassword, $pdo, $userAccountID, $postID, $likeId;
+global $connection, $dbHost, $dbName, $dbUsername, $dbPassword, $pdo, $userAccountID, $postID, $count;
 
 // set database details
 $DB_HOST = $dbHost;

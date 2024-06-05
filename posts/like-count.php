@@ -14,14 +14,12 @@ $DB_PASSWORD= $dbPassword;
 // Retrieve inputs from the form
 $data = json_decode(file_get_contents("php://input"), true);
 $postID = $data['postId'];
-$userAccountID = $data['userAccountId'];
 
 // Check if the user account has already liked the post
 try {
     $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUsername, $dbPassword);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // check like count
     $statement = $pdo->prepare("
         SELECT COUNT(*)
         FROM tbl_like_posT       
@@ -37,25 +35,8 @@ try {
         ");
     $statement->execute([$count, $postID]);
 
-    // check user has liked
-    $likeStatement = $pdo->prepare("
-        SELECT lk.ID_Like AS like_id
-        FROM tbl_like lk
-                 JOIN
-             tbl_like_post lkp ON lk.ID_Like = lkp.ID_Like 
-        WHERE lk.ID_UserAccount = ? AND lkp.ID_Post = ?;
-    ");
-    $likeStatement->execute([$userAccountID, $postID]);
-    $count = $likeStatement->fetchColumn();
-    $likeStatement->closeCursor();
-
+    echo json_encode(["Count" => $count]);
 } catch (PDOException $e) {
     echo json_encode(["error" => "Connection failed"]);
-    exit(); // Terminate script execution after encountering a connection failure
-}
-
-if ($count) {
-    echo json_encode(["hasLiked" => "true"]);
-} else {
-    echo json_encode(["hasLiked" => "false"]);
+    exit();
 }

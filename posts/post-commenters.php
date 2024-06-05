@@ -2,7 +2,7 @@
 
 global $statement, $error;
 include '../connect.php';
-global $connection, $dbHost, $dbName, $dbUsername, $dbPassword, $pdo, $userAccountID, $postID, $likeId;
+global $connection, $dbHost, $dbName, $dbUsername, $dbPassword, $pdo, $userAccountID, $postID, $count;
 
 // set database details
 $DB_HOST = $dbHost;
@@ -20,6 +20,22 @@ try {
     $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUsername, $dbPassword);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->beginTransaction();
+
+    // check comment count
+    $statement = $pdo->prepare("
+        SELECT COUNT(*)
+        FROM tbl_comment   
+        WHERE ID_Post = ?;
+    ");
+    $statement->execute([$postID]);
+    $count = $statement->fetchColumn();
+
+    $statement = $pdo->prepare("
+            UPDATE tbl_post
+            SET CommentCount = ?
+            WHERE ID_Post = ?
+        ");
+    $statement->execute([$count, $postID]);
 
     $statement = $pdo->prepare("
         SELECT 

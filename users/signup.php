@@ -88,7 +88,6 @@ try {
     );
     $statement->execute([$firstname, $lastname, $gender, $birthdate]);
     $userID = $pdo->lastInsertId(); // retrieve the ID of the newly inserted user
-    $errorMessage =
 
     // insert a new account into tbl_account
     $statement = $pdo->prepare(

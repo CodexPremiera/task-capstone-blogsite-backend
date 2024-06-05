@@ -29,7 +29,7 @@ try {
         "SELECT
             COUNT(*) as Count
         FROM
-            tbl_admin_account admins
+            tbl_admin_account admin
         WHERE
             ID_UserAccount = ?"
     );
@@ -50,7 +50,4 @@ try {
     echo "Error: " . $error->getMessage();
     echo json_encode(["error" => "Admin retrieval failed."]);
 }
-
-// It's better to remove this line as it may not be needed
-// die(mysqli_error($connection));
 
