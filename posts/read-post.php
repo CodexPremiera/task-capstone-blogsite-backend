@@ -13,9 +13,72 @@ $DB_PASSWORD= $dbPassword;
 // retrieve inputs from the form
 if(!isset($_GET['postId']))
     die(mysqli_error($connection));
-
-// query the database to get all posts
 $postId = $_GET['postId'];
+
+$data = json_decode(file_get_contents("php://input"), true);
+$userAccountID = isset($data['userAccountId']) ? $data['userAccountId'] : null;
+
+
+// get read count
+try {
+    $pdo = new PDO("mysql:host=$DB_HOST;dbname=$DB_NAME", $DB_USERNAME, $DB_PASSWORD);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+    // Check if the user has read the post
+    $readStatement = $pdo->prepare("
+        SELECT *
+        FROM tbl_read_post
+        WHERE ID_UserAccount = ?
+            AND ID_Post = ?;
+    ");
+    $readStatement->execute([$userAccountID, $postId]);
+    $userHasRead = $readStatement->fetchColumn() ? true : false;
+
+    if (!$userHasRead) {
+        try {
+            $pdo->beginTransaction(); // Start a transaction
+
+            // Insert a new like into tbl_like
+            $insertReadStatement = $pdo->prepare("
+                INSERT INTO tbl_read_post (ID_UserAccount, ID_Post) 
+                VALUES (?, ?)
+            ");
+            $insertReadStatement->execute([$userAccountID, $postId]);
+            $count = $pdo->lastInsertId(); // Retrieve the ID of the newly inserted like
+
+            $pdo->commit(); // Commit the transaction
+        } catch (PDOException $error) {
+            $pdo->rollBack(); // Rollback the transaction on error
+            http_response_code(500);
+            echo json_encode(["error" => "Like failed. " . $error->getMessage()]);
+            exit(); // Terminate script execution after encountering an error
+        }
+    }
+
+    // get read count
+    $statement = $pdo->prepare("
+        SELECT COUNT(*)
+        FROM tbl_read_post
+        WHERE ID_Post = ?
+    ");
+    $statement->execute([$postId]);
+    $readCount = (int)$statement->fetchColumn();
+
+    // update post read count
+    $statement = $pdo->prepare("
+        UPDATE tbl_post
+        SET ReadCount = ?
+        WHERE ID_Post = ?
+    ");
+    $statement->execute([$readCount, $postId]);
+} catch (PDOException $e) {
+    echo json_encode(["error" => "Connection failed: " . $e->getMessage()]);
+    exit();
+}
+
+
+// query the database to get post
 try {
     // create and start a new PDO instance
     $pdo = new PDO("mysql:host=$DB_HOST;dbname=$DB_NAME", $DB_USERNAME, $DB_PASSWORD);
