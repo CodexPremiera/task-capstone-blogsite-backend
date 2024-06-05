@@ -2,7 +2,7 @@
 
 global $statement;
 include '../connect.php';
-global $connection, $dbHost, $dbName, $dbUsername, $dbPassword, $pdo, $userAccountID, $postID, $count;
+global $connection, $dbHost, $dbName, $dbUsername, $dbPassword, $pdo, $userAccountID, $commentID, $count;
 
 // set database details
 $DB_HOST = $dbHost;
@@ -13,7 +13,7 @@ $DB_PASSWORD= $dbPassword;
 
 // Retrieve inputs from the form
 $data = json_decode(file_get_contents("php://input"), true);
-$postID = $data['postId'];
+$commentID = $data['postId'];
 $userAccountID = $data['userAccountId'];
 
 // Check if the user account has already liked the post
@@ -27,7 +27,7 @@ try {
         FROM tbl_like_posT       
         WHERE ID_Post = ?;
     ");
-    $statement->execute([$postID]);
+    $statement->execute([$commentID]);
     $count = $statement->fetchColumn();
 
     $statement = $pdo->prepare("
@@ -35,7 +35,7 @@ try {
             SET ReactCount = ?
             WHERE ID_Post = ?
         ");
-    $statement->execute([$count, $postID]);
+    $statement->execute([$count, $commentID]);
 
     // check user has liked
     $likeStatement = $pdo->prepare("
@@ -45,7 +45,7 @@ try {
              tbl_like_post lkp ON lk.ID_Like = lkp.ID_Like 
         WHERE lk.ID_UserAccount = ? AND lkp.ID_Post = ?;
     ");
-    $likeStatement->execute([$userAccountID, $postID]);
+    $likeStatement->execute([$userAccountID, $commentID]);
     $count = $likeStatement->fetchColumn();
     $likeStatement->closeCursor();
 

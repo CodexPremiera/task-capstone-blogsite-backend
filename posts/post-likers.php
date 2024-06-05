@@ -2,7 +2,7 @@
 
 global $statement, $error;
 include '../connect.php';
-global $connection, $dbHost, $dbName, $dbUsername, $dbPassword, $pdo, $userAccountID, $postID, $count;
+global $connection, $dbHost, $dbName, $dbUsername, $dbPassword, $pdo, $userAccountID, $commentID, $count;
 
 // set database details
 $DB_HOST = $dbHost;
@@ -13,7 +13,7 @@ $DB_PASSWORD= $dbPassword;
 
 // Retrieve inputs from the form
 $data = json_decode(file_get_contents("php://input"), true);
-$postID = intval($data['ID_Post']);
+$commentID = intval($data['ID_Post']);
 
 // Check if the user account has already liked the post
 try {
@@ -43,7 +43,7 @@ try {
             lp.ID_Post = ?;
     ");
 
-    $statement->execute([$postID]);
+    $statement->execute([$commentID]);
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     $pdo->commit();
 

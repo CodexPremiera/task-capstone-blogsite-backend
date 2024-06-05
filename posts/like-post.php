@@ -2,7 +2,7 @@
 
 global $statement;
 include '../connect.php';
-global $connection, $dbHost, $dbName, $dbUsername, $dbPassword, $pdo, $userAccountID, $postID, $count;
+global $connection, $dbHost, $dbName, $dbUsername, $dbPassword, $pdo, $userAccountID, $commentID, $count;
 
 // set database details
 $DB_HOST = $dbHost;
@@ -13,7 +13,7 @@ $DB_PASSWORD= $dbPassword;
 
 // Retrieve inputs from the form
 $data = json_decode(file_get_contents("php://input"), true);
-$postID = $data['postId'];
+$commentID = $data['postId'];
 $userAccountID = $data['userAccountId'];
 
 // Check if the user account has already liked the post
@@ -29,7 +29,7 @@ try {
         WHERE lk.ID_UserAccount = ? AND lkp.ID_Post = ?;
     ");
 
-    $likeStatement->execute([$userAccountID, $postID]);
+    $likeStatement->execute([$userAccountID, $commentID]);
     $count = $likeStatement->fetchColumn();
     $likeStatement->closeCursor();
 } catch (PDOException $e) {
@@ -50,7 +50,7 @@ if ($count) {
             SET ReactCount = ReactCount - 1
             WHERE ID_Post = ?
         ");
-        $deleteStatement->execute([$count, $count, $postID]);
+        $deleteStatement->execute([$count, $count, $commentID]);
     } catch (PDOException $e) {
         echo json_encode(["error" => "Deletion failed"]);
         exit(); // Terminate script execution after encountering a deletion failure
@@ -72,7 +72,7 @@ if ($count) {
             INSERT INTO tbl_like_post (ID_Like, ID_Post) 
             VALUES (?, ?)
         ");
-        $insertLikePostStatement->execute([$count, $postID]);
+        $insertLikePostStatement->execute([$count, $commentID]);
 
         // Increment react count
         $updatePostReactCountStatement = $pdo->prepare("
@@ -80,7 +80,7 @@ if ($count) {
             SET ReactCount = ReactCount + 1
             WHERE ID_Post = ?
         ");
-        $updatePostReactCountStatement->execute([$postID]);
+        $updatePostReactCountStatement->execute([$commentID]);
 
         $pdo->commit(); // Commit the transaction
     } catch (PDOException $error) {

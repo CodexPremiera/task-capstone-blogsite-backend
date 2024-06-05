@@ -2,7 +2,7 @@
 
 global $statement;
 include '../connect.php';
-global $connection, $dbHost, $dbName, $dbUsername, $dbPassword, $pdo, $userAccountID, $postID, $count;
+global $connection, $dbHost, $dbName, $dbUsername, $dbPassword, $pdo, $userAccountID, $commentID, $count;
 
 // set database details
 $DB_HOST = $dbHost;
@@ -13,7 +13,7 @@ $DB_PASSWORD= $dbPassword;
 
 // Retrieve inputs from the form
 $data = json_decode(file_get_contents("php://input"), true);
-$postID = $data['postId'];
+$commentID = $data['postId'];
 
 // Check if the user account has already liked the post
 try {
@@ -25,7 +25,7 @@ try {
         FROM tbl_like_posT       
         WHERE ID_Post = ?;
     ");
-    $statement->execute([$postID]);
+    $statement->execute([$commentID]);
     $count = $statement->fetchColumn();
 
     $statement = $pdo->prepare("
@@ -33,7 +33,7 @@ try {
             SET ReactCount = ?
             WHERE ID_Post = ?
         ");
-    $statement->execute([$count, $postID]);
+    $statement->execute([$count, $commentID]);
 
     echo json_encode(["Count" => $count]);
 } catch (PDOException $e) {
